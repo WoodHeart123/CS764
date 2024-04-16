@@ -6,20 +6,23 @@
 
 class Buffer{
 public:
-    Buffer();
+    Buffer(size_t recordSize);
     // create a new page
-    Page createNewPage();
+    Page* createNewPage();
     // get an existing page, first from buffer, then from disk
-    Page getExistingPage(size_t pageIndex) const;
-    // change an existing page, first from buffer, then read from disk and change
-    bool setPage(size_t pageIndex, const Page& page);
+    Page* getExistingPage(size_t pageIndex);
     size_t getTotalPages() const;
     // flush a page to disk
     bool flushPage(size_t pageIndex);
+    // flush all pages to disk
+    bool flushAllPages();
+    // check if buffer is full
+    bool isFull() const;
 private:
-    Disk disk;
+    Disk* disk;
     std::unordered_map<size_t, Page> buffer;
     const static size_t bufferSize = BUFFER_SIZE;
     const static size_t numOfPagesInBuffer = BUFFER_SIZE / PAGE_SIZE;
     size_t totalPages;
+    size_t recordSize;
 };
