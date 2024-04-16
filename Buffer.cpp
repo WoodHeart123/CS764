@@ -75,7 +75,7 @@ bool Buffer::flushPage(size_t pageIndex)
     if (it != buffer.end())
     {
         // Attempt to write the page to disk
-        if(!it-> second.getIsDirty() || disk.writePagesToDisk(pageIndex * PAGE_SIZE, {it->second})){
+        if(!it-> second.getIsDirty() || disk -> writePagesToDisk(pageIndex * PAGE_SIZE, {it->second})){
             // Remove the page from the buffer
             buffer.erase(it);
             return true;
