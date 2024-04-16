@@ -7,7 +7,7 @@ int main (int argc, char * argv [])
 {
 	TRACE (true);
 
-	Buffer * const buffer = new Buffer ();
+	Buffer * const buffer = new Buffer(120);
 	Plan * const plan = new ScanPlan (7, buffer, 120);
 	// new SortPlan ( new FilterPlan ( new ScanPlan (7) ) );
 
