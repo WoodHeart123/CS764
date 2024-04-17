@@ -57,7 +57,7 @@ std::vector<byte> ScanIterator::generateAlphanumericVector(size_t length)
 	result.reserve(length); // Reserve memory for efficiency
 
 	// Random number generation setup
-	std::mt19937 rng();							 // Random number generator
+	std::mt19937 rng;;							 // Random number generator
 	std::uniform_int_distribution<> dist(0, 61); // Range includes 26 lowercase + 26 uppercase + 10 digits
 
 	for (size_t i = 0; i < length; ++i)

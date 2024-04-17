@@ -6,8 +6,8 @@
 
 typedef uint8_t byte;
 
-#define PAGE_SIZE 16 * 1024
-#define BUFFER_SIZE 100 * 1024 * 1024
+#define PAGE_SIZE (16 * 1024ULL)
+#define BUFFER_SIZE (100 * 1024ULL * 1024ULL)
 #define SSD_SIZE 10ULL * 1024ULL * 1024ULL * 1024ULL // 10Gig of ssd
 #define SSD_LATENCY 0.1 // 0.1ms
 #define SSD_BANDWIDTH 200 * 1024 * 1024 // 200MB/s
@@ -16,7 +16,7 @@ typedef uint8_t byte;
 
 #define slotsof(a)	(sizeof (a) / sizeof (a[0]))
 
-#define nullptr	((void *) NULL)
+//#define nullptr	((void *) NULL)
 
 #define yesno(b)	((b) ? "yes" : "no")
 

@@ -17,7 +17,7 @@ Disk::Disk(std::string SSDName, std::string HDDName) : SSDName(SSDName), HDDName
 }
 
 std::vector<Page> Disk::readPagesFromDisk(unsigned long long offset, size_t recordSize, size_t numPages) {
-    std::string fileName = offset < _SSDSize ? SSDName : HDDName;
+    std::string fileName = offset < SSDSize ? SSDName : HDDName;
     std::ifstream file(fileName, std::ios::binary);
     if (!file) {
         std::cerr << "Failed to open " << fileName << " for reading.\n";
@@ -25,7 +25,7 @@ std::vector<Page> Disk::readPagesFromDisk(unsigned long long offset, size_t reco
 
     // Adjust offset for HDD if necessary
     if (fileName == HDDName) {
-        offset -= _SSDSize;
+        offset -= SSDSize;
     }
 
     file.seekg(offset);
@@ -46,7 +46,7 @@ std::vector<Page> Disk::readPagesFromDisk(unsigned long long offset, size_t reco
 }
 
 bool Disk::writePagesToDisk(unsigned long long offset, std::vector<Page> pages) {
-    std::string fileName = offset < _SSDSize ? SSDName : HDDName;
+    std::string fileName = offset < SSDSize ? SSDName : HDDName;
     std::ofstream file(fileName, std::ios::binary | std::ios::in | std::ios::out);
     if (!file) {
         std::cerr << "Failed to open " << fileName << " for writing.\n";
@@ -55,7 +55,7 @@ bool Disk::writePagesToDisk(unsigned long long offset, std::vector<Page> pages) 
 
     // Adjust offset for HDD if necessary
     if (fileName == HDDName) {
-        offset -= _SSDSize;
+        offset -= SSDSize;
     }
 
     file.seekp(offset);

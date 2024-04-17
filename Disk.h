@@ -2,7 +2,7 @@
 
 #include "defs.h"
 #include <string>
-#include <Data.h>
+#include "Data.h"
  
 
 class Disk{
@@ -19,5 +19,5 @@ public:
 private:
     const std::string SSDName;
     const std::string HDDName;
-    const static unsigned long long _SSDSize;
+    const unsigned long long SSDSize = 10 * 1024ULL * 1024ULL * 1024ULL;
 };
