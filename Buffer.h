@@ -14,6 +14,8 @@ public:
     size_t getTotalPages() const;
     // flush a page to disk
     bool flushPage(size_t pageIndex);
+    // replace a page in buffer with a new page
+    bool replacePage(size_t pageIndex, Page* newPage);
     // flush all pages to disk
     bool flushAllPages();
     // check if buffer is full

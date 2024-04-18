@@ -87,3 +87,10 @@ bool Buffer::flushPage(size_t pageIndex)
     }
     return false; // Page not found in buffer or flush failed
 }
+
+// Replace a page in the buffer with a new page
+bool Buffer::replacePage(size_t pageIndex, Page* newPage){
+    buffer.erase(buffer.find(pageIndex));
+    buffer[pageIndex] = *newPage;
+    return true;
+}
