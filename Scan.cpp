@@ -7,8 +7,6 @@
 
 ScanPlan::ScanPlan(RowCount const count, Buffer *buffer, size_t record_size) : count(count), buffer(buffer), record_size(record_size), numPages(0)
 {
-	Iterator *scanIterator = this -> init();
-	scanIterator -> run();
 }
 
 Iterator *ScanPlan::init() const
@@ -29,6 +27,7 @@ ScanIterator::ScanIterator(ScanPlan const *const plan) : _plan(plan), currentRow
 
 bool ScanIterator::next()
 {
+  TRACE (true);
 	if (currentRowCount >= _plan->count)
 	{
 		if (currentPage && currentPage->getIsDirty())
@@ -37,7 +36,6 @@ bool ScanIterator::next()
 		}
 		return false;
 	}
-
 	DataRecord* newRecord = new DataRecord(generateAlphanumericVector(_plan -> record_size));
 	if(!currentPage->addRecord(*newRecord)){
 		// If page is full, flush it and get/create a new one
@@ -53,11 +51,13 @@ ScanIterator::~ScanIterator(){}
 
 std::vector<byte> ScanIterator::generateAlphanumericVector(size_t length)
 {
+  TRACE (true);
 	std::vector<byte> result;
 	result.reserve(length); // Reserve memory for efficiency
 
 	// Random number generation setup
-	std::mt19937 rng;;							 // Random number generator
+	std::random_device rd; // Seed
+  std::mt19937 rng(rd());	// Random number generator
 	std::uniform_int_distribution<> dist(0, 61); // Range includes 26 lowercase + 26 uppercase + 10 digits
 
 	for (size_t i = 0; i < length; ++i)

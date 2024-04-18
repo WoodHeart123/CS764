@@ -46,6 +46,7 @@ std::vector<Page> Disk::readPagesFromDisk(unsigned long long offset, size_t reco
 }
 
 bool Disk::writePagesToDisk(unsigned long long offset, std::vector<Page> pages) {
+    TRACE (true);
     std::string fileName = offset < SSDSize ? SSDName : HDDName;
     std::ofstream file(fileName, std::ios::binary | std::ios::in | std::ios::out);
     if (!file) {

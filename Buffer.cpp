@@ -12,6 +12,7 @@ Buffer::Buffer(size_t size) : totalPages(0), recordSize(size)
 // Create a new page and add it to the buffer
 Page *Buffer::createNewPage()
 {
+    TRACE (true);
     if (buffer.size() >= numOfPagesInBuffer)
     {
         std::cerr << "Buffer is full, consider flushing pages to disk." << std::endl;
@@ -19,6 +20,7 @@ Page *Buffer::createNewPage()
     }
     Page newPage = Page(recordSize);
     size_t newPageIndex = totalPages;
+    newPage.setPageIndex(newPageIndex);
     buffer[newPageIndex] = newPage;
     totalPages++;
     return &buffer[newPageIndex];
@@ -27,6 +29,7 @@ Page *Buffer::createNewPage()
 // Get an existing page from buffer or from disk if not in buffer
 Page *Buffer::getExistingPage(size_t pageIndex)
 {
+    TRACE (true);
     auto it = buffer.find(pageIndex);
     if (it != buffer.end())
     {
@@ -71,6 +74,7 @@ bool Buffer::isFull() const
 // Flush a specific page to disk
 bool Buffer::flushPage(size_t pageIndex)
 {
+    TRACE (true);
     auto it = buffer.find(pageIndex);
     if (it != buffer.end())
     {
