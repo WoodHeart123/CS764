@@ -16,7 +16,7 @@ Disk::Disk(std::string SSDName, std::string HDDName) : SSDName(SSDName), HDDName
     std::ofstream hddFile(HDDName, std::ios::binary | std::ios::app);
 }
 
-std::vector<Page> Disk::readPagesFromDisk(unsigned long long offset, size_t recordSize, size_t numPages) {
+std::vector<std::unique_ptr<Page>> Disk::readPagesFromDisk(unsigned long long offset, size_t recordSize, size_t numPages) {
     std::string fileName = offset < SSDSize ? SSDName : HDDName;
     std::ifstream file(fileName, std::ios::binary);
     if (!file) {
@@ -35,17 +35,16 @@ std::vector<Page> Disk::readPagesFromDisk(unsigned long long offset, size_t reco
         std::cerr << "Failed to read page from " << fileName << ".\n";
     }
 
-    std::vector<Page> pages;
+    std::vector<std::unique_ptr<Page>> pages;
     for (size_t i = 0; i < numPages; i++) {
         std::vector<byte> pageData(data.begin() + i * PAGE_SIZE, data.begin() + (i + 1) * PAGE_SIZE);
-        Page* page = new Page(recordSize, pageData);
-        pages.push_back(*page);
+        std::unique_ptr<Page> page (new Page(recordSize, pageData));
+        pages.push_back(page);
     }
-
     return pages;
 }
 
-bool Disk::writePagesToDisk(unsigned long long offset, std::vector<Page> pages) {
+bool Disk::writePagesToDisk(unsigned long long offset, std::vector<std::unique_ptr<Page>> pages) {
     TRACE (true);
     std::string fileName = offset < SSDSize ? SSDName : HDDName;
     std::ofstream file(fileName, std::ios::binary | std::ios::in | std::ios::out);
@@ -63,7 +62,7 @@ bool Disk::writePagesToDisk(unsigned long long offset, std::vector<Page> pages) 
 
     std::vector<byte> data;
     for (const auto &page : pages) {
-        auto pageData = page.serialize();
+        auto pageData = page -> serialize();
         data.insert(data.end(), pageData.begin(), pageData.end());
     }
     if (!file.write(reinterpret_cast<char*>(&data[0]), data.size())) {

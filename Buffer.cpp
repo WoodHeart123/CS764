@@ -10,7 +10,7 @@ Buffer::Buffer(size_t size) : totalPages(0), recordSize(size)
 }
 
 // Create a new page and add it to the buffer
-Page *Buffer::createNewPage()
+std::unique_ptr<Page> Buffer::createNewPage()
 {
     TRACE (true);
     if (buffer.size() >= numOfPagesInBuffer)
@@ -18,35 +18,35 @@ Page *Buffer::createNewPage()
         std::cerr << "Buffer is full, consider flushing pages to disk." << std::endl;
         return (Page*) nullptr; // Buffer is full
     }
-    Page newPage = Page(recordSize);
+    std::unique_ptr<Page> newPage(new Page(recordSize));
     size_t newPageIndex = totalPages;
-    newPage.setPageIndex(newPageIndex);
+    newPage -> setPageIndex(newPageIndex);
     buffer[newPageIndex] = newPage;
     totalPages++;
-    return &buffer[newPageIndex];
+    return newPage;
 }
 
 // Get an existing page from buffer or from disk if not in buffer
-Page *Buffer::getExistingPage(size_t pageIndex)
+std::unique_ptr<Page> Buffer::getExistingPage(size_t pageIndex)
 {
     TRACE (true);
     auto it = buffer.find(pageIndex);
     if (it != buffer.end())
     {
-        return &buffer.at(pageIndex); // Page found in buffer
+        return buffer.at(pageIndex); // Page found in buffer
     }
     else
     {
         // Load page from disk if not found in buffer
-        std::vector<Page> pages = disk -> readPagesFromDisk(pageIndex * PAGE_SIZE, sizeof(DataRecord), 1);
+        std::vector<std::unique_ptr<Page>> pages = disk -> readPagesFromDisk(pageIndex * PAGE_SIZE, sizeof(DataRecord), 1);
         if (!pages.empty())
         {
             // Assume only one page was read
             buffer[pageIndex] = pages[0];
-            return &buffer.at(pageIndex);
+            return buffer.at(pageIndex);
         }
     }
-    return (Page*) nullptr; // Page not found in buffer and could not be loaded from disk
+    return nullptr; // Page not found in buffer and could not be loaded from disk
 }
 
 // Get the total number of pages managed by the buffer
@@ -79,7 +79,7 @@ bool Buffer::flushPage(size_t pageIndex)
     if (it != buffer.end())
     {
         // Attempt to write the page to disk
-        if(!it-> second.getIsDirty() || disk -> writePagesToDisk(pageIndex * PAGE_SIZE, {it->second})){
+        if(!it-> second -> getIsDirty() || disk -> writePagesToDisk(pageIndex * PAGE_SIZE, {it->second})){
             // Remove the page from the buffer
             buffer.erase(it);
             return true;
@@ -88,9 +88,14 @@ bool Buffer::flushPage(size_t pageIndex)
     return false; // Page not found in buffer or flush failed
 }
 
-// Replace a page in the buffer with a new page
-bool Buffer::replacePage(size_t pageIndex, Page* newPage){
+bool Buffer::erasePage(size_t pageIndex){
     buffer.erase(buffer.find(pageIndex));
-    buffer[pageIndex] = *newPage;
+    return true;
+}
+
+// Replace a page in the buffer with a new page
+bool Buffer::replacePage(size_t pageIndex, std::unique_ptr<Page> newPage){
+    buffer.erase(buffer.find(pageIndex));
+    buffer[pageIndex] = newPage;
     return true;
 }
