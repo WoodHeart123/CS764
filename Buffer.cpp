@@ -10,24 +10,23 @@ Buffer::Buffer(size_t size) : totalPages(0), recordSize(size)
 }
 
 // Create a new page and add it to the buffer
-std::unique_ptr<Page> Buffer::createNewPage()
+std::shared_ptr<Page> Buffer::createNewPage()
 {
     TRACE (true);
     if (buffer.size() >= numOfPagesInBuffer)
     {
         std::cerr << "Buffer is full, consider flushing pages to disk." << std::endl;
-        return (Page*) nullptr; // Buffer is full
+        return nullptr; // Buffer is full
     }
-    std::unique_ptr<Page> newPage(new Page(recordSize));
     size_t newPageIndex = totalPages;
-    newPage -> setPageIndex(newPageIndex);
-    buffer[newPageIndex] = newPage;
+    buffer[newPageIndex] = std::shared_ptr<Page> (new Page(recordSize));
+    buffer[newPageIndex] -> setPageIndex(newPageIndex);
     totalPages++;
-    return newPage;
+    return buffer[newPageIndex];
 }
 
 // Get an existing page from buffer or from disk if not in buffer
-std::unique_ptr<Page> Buffer::getExistingPage(size_t pageIndex)
+std::shared_ptr<Page> Buffer::getExistingPage(size_t pageIndex)
 {
     TRACE (true);
     auto it = buffer.find(pageIndex);
@@ -38,7 +37,7 @@ std::unique_ptr<Page> Buffer::getExistingPage(size_t pageIndex)
     else
     {
         // Load page from disk if not found in buffer
-        std::vector<std::unique_ptr<Page>> pages = disk -> readPagesFromDisk(pageIndex * PAGE_SIZE, sizeof(DataRecord), 1);
+        std::vector<std::shared_ptr<Page>> pages = disk -> readPagesFromDisk(pageIndex * PAGE_SIZE, sizeof(DataRecord), 1);
         if (!pages.empty())
         {
             // Assume only one page was read
@@ -94,7 +93,7 @@ bool Buffer::erasePage(size_t pageIndex){
 }
 
 // Replace a page in the buffer with a new page
-bool Buffer::replacePage(size_t pageIndex, std::unique_ptr<Page> newPage){
+bool Buffer::replacePage(size_t pageIndex, std::shared_ptr<Page> newPage){
     buffer.erase(buffer.find(pageIndex));
     buffer[pageIndex] = newPage;
     return true;

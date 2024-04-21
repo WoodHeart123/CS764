@@ -25,5 +25,5 @@ public:
 private:
 	ScanPlan const * const _plan;
 	RowCount currentRowCount;
-	std::unique_ptr<Page> currentPage;
+	std::shared_ptr<Page> currentPage;
 }; // class ScanIterator
