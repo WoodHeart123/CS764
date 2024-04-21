@@ -16,8 +16,6 @@ Iterator *ScanPlan::init() const
 
 ScanPlan::~ScanPlan()
 {
-	delete buffer;
-	delete this;
 }
 
 ScanIterator::ScanIterator(ScanPlan const *const plan) : _plan(plan), currentRowCount(0)

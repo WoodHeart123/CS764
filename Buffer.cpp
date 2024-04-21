@@ -9,6 +9,10 @@ Buffer::Buffer(size_t size) : totalPages(0), recordSize(size)
     disk = new Disk();
 }
 
+Buffer::~Buffer(){
+  delete disk;
+}
+
 // Create a new page and add it to the buffer
 std::shared_ptr<Page> Buffer::createNewPage()
 {

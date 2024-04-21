@@ -14,8 +14,10 @@ int main (int argc, char * argv [])
 	Iterator * const it = plan->init ();
 	it->run ();
 	delete it;
-
+  
 	delete plan;
+ 
+  delete buffer;
 
 	return 0;
 } // main
