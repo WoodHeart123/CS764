@@ -43,6 +43,7 @@ bool ScanIterator::next()
 		currentPage = _plan->buffer->createNewPage();
 		currentPage->addRecord(*newRecord);
 	}
+  delete newRecord;
 	currentRowCount++;
 	return true;
 }
@@ -51,7 +52,6 @@ ScanIterator::~ScanIterator(){}
 
 std::vector<byte> ScanIterator::generateAlphanumericVector(size_t length)
 {
-  TRACE (true);
 	std::vector<byte> result;
 	result.reserve(length); // Reserve memory for efficiency
 

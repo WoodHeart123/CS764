@@ -2,6 +2,7 @@
 
 #include "defs.h"
 #include <string>
+#include <memory>
 #include "Data.h"
  
 

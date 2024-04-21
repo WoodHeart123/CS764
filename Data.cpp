@@ -66,8 +66,6 @@ std::vector<byte> Page::serialize() const
 
 bool Page::addRecord(const DataRecord &record)
 {
-    TRACE(true);
-    printf("%d %d", recordSize + recordSize * records.size(), pageSize);
     if (recordSize * (records.size() + 1ULL) > pageSize)
     {
        return false;
