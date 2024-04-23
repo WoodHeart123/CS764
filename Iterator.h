@@ -12,6 +12,10 @@ public:
 	virtual ~Plan ();
 	virtual class Iterator * init () const = 0;
 private:
+	Buffer* buffer;
+	RowCount const count;
+	size_t record_size;
+	size_t numPages;
 }; // class Plan
 
 class Iterator

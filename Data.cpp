@@ -10,6 +10,24 @@ DataRecord::DataRecord(const std::vector<byte> &data)
     fields.insert(fields.end(), it, data.end());
 }
 
+/**
+compare two records
+*/
+int DataRecord::cmp(const DataRecord& other) const {
+    size_t len1 = key.size();
+    size_t len2 = other.key.size();
+    size_t minLen = (len1 < len2) ? len1 : len2;
+
+    for (size_t i = 0; i < minLen; ++i) {
+        if (key[i] < other.key[i]) return -1;
+        if (key[i] > other.key[i]) return 1;
+    }
+
+    if (len1 < len2) return -1;
+    if (len1 > len2) return 1;
+    return 0;
+}
+
 /*
 serialize a row into a byte vector
 */

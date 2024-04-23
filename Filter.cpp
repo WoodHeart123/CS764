@@ -1,8 +1,12 @@
 #include "Filter.h"
 
-FilterPlan::FilterPlan (Plan * const input) : _input (input)
+FilterPlan::FilterPlan (Plan * const input, Predicate predicate, std::vector<byte> value) : _input (input), predicate(predicate), value(value)
 {
 	TRACE (true);
+	this -> buffer = input -> buffer;
+	this -> count = input -> count;
+	this -> record_size = input -> record_size;
+	this -> numPages = input -> numPages;
 } // FilterPlan::FilterPlan
 
 FilterPlan::~FilterPlan ()

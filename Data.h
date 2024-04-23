@@ -6,6 +6,7 @@ class DataRecord {
 
 public:
     DataRecord(const std::vector<byte>& data);
+    int cmp(const DataRecord& other) const;
     std::vector<byte> serialize() const;
     std::vector<byte> key;
     std::vector<byte> fields;

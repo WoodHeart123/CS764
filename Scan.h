@@ -9,10 +9,6 @@ public:
 	~ScanPlan ();
 	Iterator * init () const;
 private:
-	Buffer* buffer;
-	RowCount const count;
-	size_t record_size;
-	size_t numPages;
 }; // class ScanPlan
 
 class ScanIterator : public Iterator
