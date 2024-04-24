@@ -28,6 +28,21 @@ int DataRecord::cmp(const DataRecord& other) const {
     return 0;
 }
 
+int DataRecord::keyCmp(const std::vector<byte>& key) const{
+    size_t len1 = this->key.size();
+    size_t len2 = key.size();
+    size_t minLen = (len1 < len2) ? len1 : len2;
+
+    for (size_t i = 0; i < minLen; ++i) {
+        if (this->key[i] < key[i]) return -1;
+        if (this->key[i] > key[i]) return 1;
+    }
+
+    if (len1 < len2) return -1;
+    if (len1 > len2) return 1;
+    return 0;
+}
+
 /*
 serialize a row into a byte vector
 */
