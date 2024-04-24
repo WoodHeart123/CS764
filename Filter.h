@@ -1,7 +1,7 @@
 #include "Iterator.h"
 
-
-enum Predicate{
+enum Predicate
+{
 	equal = 1,
 	notEqual,
 	greater,
@@ -13,12 +13,14 @@ enum Predicate{
 class FilterPlan : public Plan
 {
 	friend class FilterIterator;
+
 public:
-	FilterPlan (Plan * const input, Predicate predicate, std::vector<byte> value);
-	~FilterPlan ();
-	Iterator * init () const;
+	FilterPlan(Plan *const input, Predicate predicate, std::vector<byte> value);
+	~FilterPlan();
+	Iterator *init() const;
+
 private:
-	Plan * const _input;
+	Plan *const _input;
 	Predicate predicate;
 	std::vector<byte> value;
 }; // class FilterPlan
@@ -26,15 +28,16 @@ private:
 class FilterIterator : public Iterator
 {
 public:
-	FilterIterator (FilterPlan const * const plan);
-	~FilterIterator ();
-	bool next ();
-	bool match(const DataRecord& record, const std::vector<byte>& value);
+	FilterIterator(FilterPlan const *const plan);
+	~FilterIterator();
+	bool next();
+	bool match(const DataRecord &record, const std::vector<byte> &value);
+
 private:
-	FilterPlan const * const _plan;
+	FilterPlan const *const _plan;
 	size_t currentPageIndex;
 	size_t newPageIndex;
-  size_t totalPages;
+	size_t totalPages;
 	std::shared_ptr<Page> currentPage;
 	std::shared_ptr<Page> newPage;
 	RowCount _consumed, _produced;

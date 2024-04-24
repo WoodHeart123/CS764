@@ -5,10 +5,11 @@
 #include <memory>
 #include "Disk.h"
 
-class Buffer{
+class Buffer
+{
 public:
     Buffer(size_t recordSize);
-    ~Buffer ();
+    ~Buffer();
     // create a new page
     std::shared_ptr<Page> createNewPage();
     // get an existing page, first from buffer, then from disk
@@ -24,8 +25,9 @@ public:
     bool flushAllPages();
     // check if buffer is full
     bool isFull() const;
+
 private:
-    Disk* disk;
+    Disk *disk;
     std::unordered_map<size_t, std::shared_ptr<Page>> buffer;
     const static size_t bufferSize = BUFFER_SIZE;
     const static size_t numOfPagesInBuffer = BUFFER_SIZE / PAGE_SIZE;

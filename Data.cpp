@@ -13,33 +13,45 @@ DataRecord::DataRecord(const std::vector<byte> &data)
 /**
 compare two records
 */
-int DataRecord::cmp(const DataRecord& other) const {
+int DataRecord::cmp(const DataRecord &other) const
+{
     size_t len1 = key.size();
     size_t len2 = other.key.size();
     size_t minLen = (len1 < len2) ? len1 : len2;
 
-    for (size_t i = 0; i < minLen; ++i) {
-        if (key[i] < other.key[i]) return -1;
-        if (key[i] > other.key[i]) return 1;
+    for (size_t i = 0; i < minLen; ++i)
+    {
+        if (key[i] < other.key[i])
+            return -1;
+        if (key[i] > other.key[i])
+            return 1;
     }
 
-    if (len1 < len2) return -1;
-    if (len1 > len2) return 1;
+    if (len1 < len2)
+        return -1;
+    if (len1 > len2)
+        return 1;
     return 0;
 }
 
-int DataRecord::keyCmp(const std::vector<byte>& key) const{
+int DataRecord::keyCmp(const std::vector<byte> &key) const
+{
     size_t len1 = this->key.size();
     size_t len2 = key.size();
     size_t minLen = (len1 < len2) ? len1 : len2;
 
-    for (size_t i = 0; i < minLen; ++i) {
-        if (this->key[i] < key[i]) return -1;
-        if (this->key[i] > key[i]) return 1;
+    for (size_t i = 0; i < minLen; ++i)
+    {
+        if (this->key[i] < key[i])
+            return -1;
+        if (this->key[i] > key[i])
+            return 1;
     }
 
-    if (len1 < len2) return -1;
-    if (len1 > len2) return 1;
+    if (len1 < len2)
+        return -1;
+    if (len1 > len2)
+        return 1;
     return 0;
 }
 
@@ -49,7 +61,7 @@ serialize a row into a byte vector
 std::vector<byte> DataRecord::serialize() const
 {
     std::vector<byte> data;
-    data.reserve(key.size() + fields.size()); 
+    data.reserve(key.size() + fields.size());
     data.insert(data.end(), key.begin(), key.end());
     data.insert(data.end(), fields.begin(), fields.end());
     return data;
@@ -75,7 +87,7 @@ Page::Page(size_t recordSize, const std::vector<byte> &data) : recordSize(record
 
 /**
  * serialize the page into a byte vector
-*/
+ */
 std::vector<byte> Page::serialize() const
 {
     std::vector<byte> data;
@@ -98,7 +110,7 @@ bool Page::addRecord(const DataRecord &record)
 {
     if (recordSize * (records.size() + 1ULL) > pageSize)
     {
-       return false;
+        return false;
     }
     records.push_back(record);
     isDirty = true;
@@ -140,9 +152,10 @@ bool Page::currentPageSize() const
     return records.size() * recordSize;
 }
 
- size_t Page::size() const{
-   return records.size();
- }
+size_t Page::size() const
+{
+    return records.size();
+}
 
 bool Page::getIsDirty() const
 {
