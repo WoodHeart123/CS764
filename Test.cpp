@@ -7,10 +7,8 @@ int main (int argc, char * argv [])
 {
 	TRACE (true);
 
-	Buffer * const buffer = new Buffer(120);
-	Plan * const plan = new ScanPlan (700, buffer, 1024);
-	// new SortPlan ( new FilterPlan ( new ScanPlan (7) ) );
-
+	Buffer * const buffer = new Buffer(1024);
+	Plan * const plan =  new FilterPlan (new ScanPlan (700, buffer, 1024), greater, std::vector<byte> (8, 'z'));
 	Iterator * const it = plan->init ();
 	it->run ();
 	delete it;

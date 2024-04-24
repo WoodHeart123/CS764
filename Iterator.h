@@ -1,6 +1,7 @@
 #pragma once
 
 #include "defs.h"
+#include "Buffer.h"
 
 typedef uint64_t RowCount;
 
@@ -11,11 +12,7 @@ public:
 	Plan ();
 	virtual ~Plan ();
 	virtual class Iterator * init () const = 0;
-private:
 	Buffer* buffer;
-	RowCount const count;
-	size_t record_size;
-	size_t numPages;
 }; // class Plan
 
 class Iterator
@@ -25,7 +22,6 @@ public:
 	virtual ~Iterator ();
 	void run ();
 	virtual bool next () = 0;
-private:
 	RowCount _count;
 	RowCount _currentIndex;
 }; // class Iterator

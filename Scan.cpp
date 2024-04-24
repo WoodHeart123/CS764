@@ -5,8 +5,9 @@
 #include <ctime>
 #include <cctype>
 
-ScanPlan::ScanPlan(RowCount const count, Buffer *buffer, size_t record_size) : count(count), buffer(buffer), record_size(record_size), numPages(0)
+ScanPlan::ScanPlan(RowCount const count, Buffer *buffer, size_t record_size) : count(count), record_size(record_size)
 {
+	this->buffer = buffer;
 }
 
 Iterator *ScanPlan::init() const

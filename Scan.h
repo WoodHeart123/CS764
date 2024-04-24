@@ -1,5 +1,5 @@
 #include "Iterator.h"
-#include "Buffer.h"
+
 
 class ScanPlan : public Plan
 {
@@ -9,6 +9,8 @@ public:
 	~ScanPlan ();
 	Iterator * init () const;
 private:
+	RowCount const count;
+	size_t record_size;
 }; // class ScanPlan
 
 class ScanIterator : public Iterator
