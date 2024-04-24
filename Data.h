@@ -26,6 +26,7 @@ public:
     bool setRecord(size_t recordIndex, const DataRecord& record);
     bool getIsDirty() const;
     std::vector<DataRecord> getRecords() const;
+    size_t size() const;
     bool currentPageSize() const;
     size_t getPageIndex() const;
 private:

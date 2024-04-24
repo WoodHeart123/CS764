@@ -32,9 +32,9 @@ public:
 	bool match(const DataRecord& record, const std::vector<byte>& value);
 private:
 	FilterPlan const * const _plan;
-	Iterator * const _input;
 	size_t currentPageIndex;
 	size_t newPageIndex;
+  size_t totalPages;
 	std::shared_ptr<Page> currentPage;
 	std::shared_ptr<Page> newPage;
 	RowCount _consumed, _produced;

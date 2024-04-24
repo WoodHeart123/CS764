@@ -14,26 +14,28 @@ FilterPlan::~FilterPlan()
 Iterator *FilterPlan::init() const
 {
 	TRACE(true);
+  Iterator * const it = _input->init ();
+	it->run ();
+	delete it;
 	return new FilterIterator(this);
 } // FilterPlan::init
 
 FilterIterator::FilterIterator(FilterPlan const *const plan)
-	: _plan(plan), _input(plan->_input->init())
+	: _plan(plan)
 {
 	_currentIndex = 0;
+  totalPages = _plan-> buffer -> getTotalPages();
+  currentPageIndex = 0;
+  newPageIndex = 0;
 	_consumed = 0;
 	_produced = 0;
 	currentPage = _plan -> buffer -> getExistingPage(currentPageIndex++);
 	newPage = _plan -> buffer -> createNewPage();
-	newPage -> setPageIndex(newPageIndex++);
-
 }
 
 FilterIterator::~FilterIterator()
 {
 	TRACE(true);
-
-	delete _input;
 
 	traceprintf("produced %lu of %lu rows\n",
 				(unsigned long)(_produced),
@@ -43,7 +45,10 @@ FilterIterator::~FilterIterator()
 bool FilterIterator::next()
 {
 	TRACE(true);
-	if (currentPageIndex >= _plan-> buffer -> getTotalPages())
+
+	if(_currentIndex >= currentPage->size()){
+       printf("%d\n", currentPageIndex);
+   	if (currentPageIndex >= totalPages)
 	{
 		if (newPage && newPage->getIsDirty())
 		{
@@ -51,21 +56,22 @@ bool FilterIterator::next()
 		}
 		return false;
 	}
-
-	if(_currentIndex > currentPage->getRecords().size()){
-		currentPageIndex++;
-		currentPage = _plan -> buffer -> getExistingPage(currentPageIndex);
+  
+		currentPage = _plan -> buffer -> getExistingPage(currentPageIndex++);
 		_currentIndex = 0;
 	}
+ 
 
+  
 	const DataRecord* record = currentPage->getRecord(_currentIndex);
 	if(match(*record, _plan->value)){
 		_produced++;
 		if(!newPage->addRecord(*record)){
 			// If page is full, flush it and get/create a new one
-			_plan->buffer->replacePage(newPage->getPageIndex(), newPage);
+			_plan->buffer->replacePage(newPageIndex, newPage);
+      _plan->buffer->flushPage(newPageIndex);
+      newPageIndex++;
 			newPage = _plan->buffer->createNewPage();
-			newPage -> setPageIndex(newPageIndex++);
 			newPage->addRecord(*record);
 		}
 	}else{

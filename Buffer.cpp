@@ -46,6 +46,7 @@ std::shared_ptr<Page> Buffer::getExistingPage(size_t pageIndex)
         {
             // Assume only one page was read
             buffer[pageIndex] = pages[0];
+            buffer[pageIndex] -> setPageIndex(pageIndex);
             return buffer.at(pageIndex);
         }
     }
@@ -98,7 +99,11 @@ bool Buffer::erasePage(size_t pageIndex){
 
 // Replace a page in the buffer with a new page
 bool Buffer::replacePage(size_t pageIndex, std::shared_ptr<Page> newPage){
-    buffer.erase(buffer.find(pageIndex));
+    auto it = buffer.find(newPage -> getPageIndex());
+    if (it != buffer.end()){
+      buffer.erase(it);
+    }
+    newPage -> setPageIndex(pageIndex);
     buffer[pageIndex] = newPage;
     return true;
 }

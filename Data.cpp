@@ -66,8 +66,6 @@ Page::Page(size_t recordSize, const std::vector<byte> &data) : recordSize(record
     it += sizeof(size_t);
     for (size_t i = 0; i < numRecords; i++)
     {
-        size_t recordSize = *reinterpret_cast<const size_t *>(&*it);
-        it += sizeof(size_t);
         std::vector<byte> recordData(it, it + recordSize);
         it += recordSize;
         DataRecord record(recordData);
@@ -91,7 +89,6 @@ std::vector<byte> Page::serialize() const
     }
 
     // padded with zeros
-    size_t padding = PAGE_SIZE - data.size();
     data.resize(PAGE_SIZE, 0);
 
     return data;
@@ -142,6 +139,10 @@ bool Page::currentPageSize() const
 {
     return records.size() * recordSize;
 }
+
+ size_t Page::size() const{
+   return records.size();
+ }
 
 bool Page::getIsDirty() const
 {

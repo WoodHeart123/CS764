@@ -17,6 +17,7 @@ Disk::Disk(std::string SSDName, std::string HDDName) : SSDName(SSDName), HDDName
 }
 
 std::vector<std::shared_ptr<Page>> Disk::readPagesFromDisk(unsigned long long offset, size_t recordSize, size_t numPages) {
+    TRACE (true);
     std::string fileName = offset < SSDSize ? SSDName : HDDName;
     std::ifstream file(fileName, std::ios::binary);
     if (!file) {
