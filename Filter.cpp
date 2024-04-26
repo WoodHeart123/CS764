@@ -48,13 +48,16 @@ bool FilterIterator::next()
 
 	if (_currentIndex >= currentPage->size())
 	{
-		printf("%d\n", currentPageIndex);
 		if (currentPageIndex >= totalPages)
 		{
 			if (newPage && newPage->getIsDirty())
 			{
-				_plan->buffer->replacePage(newPage->getPageIndex(), newPage);
+				_plan->buffer->replacePage(newPageIndex, newPage);
+				_plan->buffer->flushPage(newPageIndex);
+				newPageIndex++;
 			}
+			_plan-> buffer -> setTotalPages(newPageIndex);
+			printf("%d\n", newPageIndex);
 			return false;
 		}
 

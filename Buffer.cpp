@@ -54,10 +54,31 @@ std::shared_ptr<Page> Buffer::getExistingPage(size_t pageIndex)
     return nullptr; // Page not found in buffer and could not be loaded from disk
 }
 
+// Get a sequence of pages from disk
+std::vector<std::shared_ptr<Page>> Buffer::getExistingPages(size_t startPageIndex, size_t endPageIndex)
+{
+    TRACE(true);
+    std::vector<std::shared_ptr<Page>> pages;
+    // Load page from disk if not found in buffer
+    std::vector<std::shared_ptr<Page>> diskPages = disk->readPagesFromDisk(startPageIndex * PAGE_SIZE, sizeof(DataRecord), endPageIndex - startPageIndex + 1);
+    for (auto &page : diskPages)
+    {
+        buffer[page->getPageIndex()] = page;
+        pages.push_back(buffer.at(page->getPageIndex()));
+    }
+    return pages;
+}
+
 // Get the total number of pages managed by the buffer
 size_t Buffer::getTotalPages() const
 {
     return totalPages;
+}
+
+// Set the total number of pages managed by the buffer
+void Buffer::setTotalPages(size_t totalPages)
+{
+    this->totalPages = totalPages;
 }
 
 bool Buffer::flushAllPages()
@@ -97,6 +118,12 @@ bool Buffer::flushPage(size_t pageIndex)
 bool Buffer::erasePage(size_t pageIndex)
 {
     buffer.erase(buffer.find(pageIndex));
+    return true;
+}
+
+bool Buffer::clear()
+{
+    buffer.clear();
     return true;
 }
 
