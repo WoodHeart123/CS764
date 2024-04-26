@@ -3,8 +3,9 @@
 
 SortPlan::SortPlan (Plan * const input) : _input (input)
 {
-	buffer = _input -> buffer;
-	numPages = buffer -> getTotalPages();
+	this -> buffer = input -> buffer;
+	this -> numPages = buffer -> getTotalPages();
+  printf("%d \n", numPages);
 	TRACE (true);
 } // SortPlan::SortPlan
 
@@ -20,6 +21,7 @@ Iterator * SortPlan::init () const
 	Iterator *const it = _input->init();
 	it->run();
 	delete it;
+  printf("%d \n", numPages);
 	return new SortIterator (this);
 } // SortPlan::init
 
@@ -74,7 +76,7 @@ bool SortIterator::next ()
 	// first sort the pages
 	for (size_t i = 0; i < _plan -> numPages; i+= _plan -> buffer -> numOfPagesInBuffer)
 	{
-		sort(i, i + _plan -> buffer -> numOfPagesInBuffer - 1);
+		sort(i, std::min(i + _plan -> buffer -> numOfPagesInBuffer - 1, _plan -> numPages));
 		runList.push_back({i, i + _plan -> buffer -> numOfPagesInBuffer - 1});
 	}
 
@@ -91,7 +93,5 @@ bool SortIterator::next ()
 	}else{
 		printf("Multiple runs %d\n", runList.size());
 	}
-
-	++ _produced;
 	return false;
 } // SortIterator::next
