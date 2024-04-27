@@ -1,7 +1,7 @@
 #pragma once
 
 #include "defs.h"
-#include <unordered_map>
+#include <map>
 #include <memory>
 #include "Disk.h"
 
@@ -35,7 +35,7 @@ public:
     const static size_t numOfPagesInBuffer = BUFFER_SIZE / PAGE_SIZE;
 private:
     Disk *disk;
-    std::unordered_map<size_t, std::shared_ptr<Page>> buffer;
+    std::map<size_t, std::shared_ptr<Page>> buffer;
     size_t totalPages;
     size_t recordSize;
 };

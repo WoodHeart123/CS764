@@ -14,7 +14,7 @@ DataRecord::DataRecord(const std::vector<byte> &data)
 compare two records
 */
 int DataRecord::cmp(const DataRecord &other) const
-{
+{  
     size_t len1 = key.size();
     size_t len2 = other.key.size();
     size_t minLen = (len1 < len2) ? len1 : len2;
@@ -32,6 +32,14 @@ int DataRecord::cmp(const DataRecord &other) const
     if (len1 > len2)
         return 1;
     return 0;
+}
+
+bool DataRecord::operator>(const DataRecord &other) const {
+    return cmp(other) > 0;
+}
+
+bool DataRecord::operator<(const DataRecord &other) const {
+    return cmp(other) < 0;
 }
 
 int DataRecord::keyCmp(const std::vector<byte> &key) const

@@ -3,9 +3,7 @@
 
 SortPlan::SortPlan (Plan * const input) : _input (input)
 {
-	this -> buffer = input -> buffer;
-	this -> numPages = buffer -> getTotalPages();
-  printf("%d \n", numPages);
+  this -> buffer = _input -> buffer;
 	TRACE (true);
 } // SortPlan::SortPlan
 
@@ -21,7 +19,6 @@ Iterator * SortPlan::init () const
 	Iterator *const it = _input->init();
 	it->run();
 	delete it;
-  printf("%d \n", numPages);
 	return new SortIterator (this);
 } // SortPlan::init
 
@@ -35,7 +32,7 @@ SortIterator::~SortIterator ()
 {
 	TRACE (true);
 
-	traceprintf ("produced %lu of %lu rows\n",
+	traceprintf ("produced %lu rows\n",
 			(unsigned long) (_produced));
 } // SortIterator::~SortIterator
 
@@ -53,7 +50,7 @@ bool SortIterator::sort (size_t startPageIndex, size_t endPageIndex)
 		}
 		page -> getRecords().clear();
 	}
-	std::sort(records.begin(), records.end(), [](DataRecord a, DataRecord b) { return a.cmp(b); });
+	std::sort(records.begin(), records.end());
 	std::shared_ptr<Page> page = pages.at(0);
 	size_t i = 1;
 	for (auto record : records)
@@ -72,11 +69,11 @@ bool SortIterator::sort (size_t startPageIndex, size_t endPageIndex)
 bool SortIterator::next ()
 {
 	TRACE (true);
-
+  size_t totalPages = _plan -> buffer -> getTotalPages();
 	// first sort the pages
-	for (size_t i = 0; i < _plan -> numPages; i+= _plan -> buffer -> numOfPagesInBuffer)
+	for (size_t i = 0; i < totalPages; i+= _plan -> buffer -> numOfPagesInBuffer)
 	{
-		sort(i, std::min(i + _plan -> buffer -> numOfPagesInBuffer - 1, _plan -> numPages));
+		sort(i, std::min(i + _plan -> buffer -> numOfPagesInBuffer - 1, totalPages - 1));
 		runList.push_back({i, i + _plan -> buffer -> numOfPagesInBuffer - 1});
 	}
 

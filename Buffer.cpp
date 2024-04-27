@@ -5,7 +5,6 @@
 
 Buffer::Buffer(size_t size) : totalPages(0), recordSize(size)
 {
-    buffer.reserve(numOfPagesInBuffer);
     disk = new Disk();
 }
 
@@ -61,8 +60,10 @@ std::vector<std::shared_ptr<Page>> Buffer::getExistingPages(size_t startPageInde
     std::vector<std::shared_ptr<Page>> pages;
     // Load page from disk if not found in buffer
     std::vector<std::shared_ptr<Page>> diskPages = disk->readPagesFromDisk(startPageIndex * PAGE_SIZE, sizeof(DataRecord), endPageIndex - startPageIndex + 1);
+    size_t i = startPageIndex;
     for (auto &page : diskPages)
     {
+        page->setPageIndex(i++);
         buffer[page->getPageIndex()] = page;
         pages.push_back(buffer.at(page->getPageIndex()));
     }
@@ -83,12 +84,23 @@ void Buffer::setTotalPages(size_t totalPages)
 
 bool Buffer::flushAllPages()
 {
-    bool success = true;
-    for (auto &page : buffer)
-    {
-        success &= flushPage(page.first);
+    
+    std::vector<std::shared_ptr<Page>> pages;
+    pages.push_back(buffer.begin() -> second);
+    size_t startIndex = buffer.begin() -> first;
+    for (auto it = std::next(buffer.begin(), 1); it != buffer.end(); ++it) {
+        if((it->first) + 1 == std::prev(buffer.begin(), 1)->first){
+          pages.push_back(it->second);
+        }else{
+          disk->writePagesToDisk(startIndex * PAGE_SIZE, pages);
+          startIndex = it->first;
+          pages.push_back(it->second);
+          
+        }
+
     }
-    return success;
+    disk->writePagesToDisk(startIndex * PAGE_SIZE, pages);
+    return true;
 }
 
 // Check if the buffer is full

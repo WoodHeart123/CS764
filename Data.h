@@ -12,6 +12,9 @@ public:
     std::vector<byte> serialize() const;
     std::vector<byte> key;
     std::vector<byte> fields;
+    
+    bool operator>(const DataRecord &other) const;
+    bool operator<(const DataRecord &other) const;
 };
 
 class Page
