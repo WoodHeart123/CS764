@@ -6,6 +6,7 @@ class DataRecord
 {
 
 public:
+    DataRecord() = default;
     DataRecord(const std::vector<byte> &data);
     int cmp(const DataRecord &other) const;
     int keyCmp(const std::vector<byte> &key) const;

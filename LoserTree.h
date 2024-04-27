@@ -59,9 +59,9 @@ public:
         tree[0] = index;  // The winner
     }
 
-    DataRecord* next() {
+    DataRecord next() {
         if (indices[tree[0]] == -1) {
-            return nullptr;
+            return DataRecord();
         }
 
         int winnerIndex = tree[0];
@@ -79,6 +79,6 @@ public:
         }
 
         adjust(winnerIndex);
-        return &winnerRecord;
+        return winnerRecord;
     }
 };

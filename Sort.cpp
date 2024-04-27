@@ -88,21 +88,20 @@ bool SortIterator::next()
 		loserTree.initialize();
 		std::shared_ptr<Page> newPage = _plan->buffer->createNewPage();
 		size_t newStartPageIndex = newPage->getPageIndex(), newEndPageIndex;
-		DataRecord *record = loserTree.next();
+		DataRecord record = loserTree.next();
 		do
 		{
-			if (!newPage->addRecord(*record))
+			if (!newPage->addRecord(record))
 			{
 				if (_plan->buffer->isFull())
 				{
 					_plan->buffer->flushAllPages();
 				}
 				newPage = _plan->buffer->createNewPage();
-				newPage->addRecord(*record);
+				newPage->addRecord(record);
 			}
-			delete record;
 			record = loserTree.next();
-		} while (record != nullptr);
+		} while (record.key.size() > 0);
 		newEndPageIndex = newPage->getPageIndex();
 		// add the new run to the runList
 		runList.push({newStartPageIndex, newEndPageIndex, newStartPageIndex});
@@ -110,7 +109,7 @@ bool SortIterator::next()
 	}
 	else
 	{
-		std::shared_ptr<Page> page = _plan->buffer->getExistingPage(runList.at(0).startPageIndex);
+		std::shared_ptr<Page> page = _plan->buffer->getExistingPage(runList.front().startPageIndex);
 		for (auto record : page->getRecords())
 		{
 			_produced++;
