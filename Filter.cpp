@@ -57,7 +57,6 @@ bool FilterIterator::next()
 				newPageIndex++;
 			}
 			_plan-> buffer -> setTotalPages(newPageIndex);
-			printf("%d\n", newPageIndex);
 			return false;
 		}
 

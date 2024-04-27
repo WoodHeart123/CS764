@@ -26,6 +26,7 @@ ScanIterator::ScanIterator(ScanPlan const *const plan) : _plan(plan), currentRow
 
 bool ScanIterator::next()
 {
+  TRACE(true);
 	if (currentRowCount >= _plan->count)
 	{
 		if (currentPage && currentPage->getIsDirty())
@@ -36,9 +37,11 @@ bool ScanIterator::next()
 	}
 	DataRecord *newRecord = new DataRecord(generateAlphanumericVector(_plan->record_size));
 	if (!currentPage->addRecord(*newRecord))
-	{
+	{  
+    if(_plan->buffer-> isFull()){
+      _plan->buffer->flushAllPages();
+    }
 		// If page is full, flush it and get/create a new one
-		_plan->buffer->flushPage(currentPage->getPageIndex());
 		currentPage = _plan->buffer->createNewPage();
 		currentPage->addRecord(*newRecord);
 	}

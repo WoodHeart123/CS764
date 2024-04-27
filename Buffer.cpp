@@ -16,7 +16,6 @@ Buffer::~Buffer()
 // Create a new page and add it to the buffer
 std::shared_ptr<Page> Buffer::createNewPage()
 {
-    TRACE(true);
     if (buffer.size() >= numOfPagesInBuffer)
     {
         std::cerr << "Buffer is full, consider flushing pages to disk." << std::endl;
@@ -32,7 +31,6 @@ std::shared_ptr<Page> Buffer::createNewPage()
 // Get an existing page from buffer or from disk if not in buffer
 std::shared_ptr<Page> Buffer::getExistingPage(size_t pageIndex)
 {
-    TRACE(true);
     auto it = buffer.find(pageIndex);
     if (it != buffer.end())
     {
@@ -56,7 +54,6 @@ std::shared_ptr<Page> Buffer::getExistingPage(size_t pageIndex)
 // Get a sequence of pages from disk
 std::vector<std::shared_ptr<Page>> Buffer::getExistingPages(size_t startPageIndex, size_t endPageIndex)
 {
-    TRACE(true);
     std::vector<std::shared_ptr<Page>> pages;
     // Load page from disk if not found in buffer
     std::vector<std::shared_ptr<Page>> diskPages = disk->readPagesFromDisk(startPageIndex * PAGE_SIZE, sizeof(DataRecord), endPageIndex - startPageIndex + 1);
@@ -84,7 +81,7 @@ void Buffer::setTotalPages(size_t totalPages)
 
 bool Buffer::flushAllPages()
 {
-    
+    TRACE(true);
     std::vector<std::shared_ptr<Page>> pages;
     pages.push_back(buffer.begin() -> second);
     size_t startIndex = buffer.begin() -> first;
@@ -112,7 +109,6 @@ bool Buffer::isFull() const
 // Flush a specific page to disk
 bool Buffer::flushPage(size_t pageIndex)
 {
-    TRACE(true);
     auto it = buffer.find(pageIndex);
     if (it != buffer.end())
     {

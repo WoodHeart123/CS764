@@ -8,7 +8,7 @@
 struct runs{
 	size_t startPageIndex;
 	size_t endPageIndex;
-    size_t currentPageIndex;
+  size_t currentPageIndex;
 }; 
 
 
