@@ -1,9 +1,7 @@
 #include "Iterator.h"
-
-struct runs{
-	size_t startPageIndex;
-	size_t endPageIndex;
-}; 
+#include "LoserTree.h"
+#include <queue>
+#include <vector>
 
 class SortPlan : public Plan
 {
@@ -27,6 +25,6 @@ public:
 	bool sort(size_t startPageIndex, size_t endPageIndex);
 private:
 	SortPlan const * const _plan;
-	std::vector<runs> runList;
+	std::queue<runs> runList;
 	RowCount _produced;
 }; // class SortIterator
