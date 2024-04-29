@@ -45,7 +45,7 @@ FilterIterator::~FilterIterator()
 
 bool FilterIterator::next()
 {
-	if (currentPageIndex >= totalPages)
+	if (currentPageIndex >= totalPages && _currentIndex >= currentPage->size())
 	{
 		if (newPage && newPage->getIsDirty())
 		{

@@ -139,7 +139,6 @@ bool Buffer::clear()
 // Replace a page in the buffer with a new page
 bool Buffer::replacePage(size_t pageIndex, std::shared_ptr<Page> newPage)
 {
-    TRACE(true);
     auto it = buffer.find(pageIndex);
     if (it != buffer.end())
     {

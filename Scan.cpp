@@ -37,6 +37,7 @@ bool ScanIterator::next()
 	DataRecord *newRecord = new DataRecord(generateAlphanumericVector(_plan->record_size));
 	if (!currentPage->addRecord(*newRecord))
 	{  
+		printf("writing to page %lu\n", currentPage->getPageIndex());
 		_plan->buffer->flushPage(currentPage->getPageIndex());
 		// If page is full, flush it and get/create a new one
 		currentPage = _plan->buffer->createNewPage();
