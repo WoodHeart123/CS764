@@ -6,9 +6,9 @@
 
 typedef uint8_t byte;
 
-#define BUFFER_SIZE (1 * 1024ULL * 1024ULL)
+#define BUFFER_SIZE (100ULL * 1024ULL * 1024ULL)
 #define PAGE_SIZE std::min(BUFFER_SIZE / 100ULL, (1 * 1024ULL * 1024ULL)) // buffer could hold at most 100 pages
-#define SSD_SIZE (10ULL  * 1024ULL * 1024ULL) // 10Mb of ssd
+#define SSD_SIZE (10ULL * 1024ULL * 1024ULL * 1024ULL) // 10Gib of ssd
 #define HDD_PAGE_INDEX (SSD_SIZE / PAGE_SIZE) // the start index of hdd pages
 #define SSD_LATENCY 0.1 // 0.1ms
 #define SSD_BANDWIDTH (200.0 * 1024.0 * 1024.0) // 200MB/s

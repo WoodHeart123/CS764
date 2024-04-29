@@ -70,7 +70,11 @@ size_t Buffer::getTotalPages() const
 
 bool Buffer::removePage(size_t pageIndex)
 {
-    buffer.erase(buffer.find(pageIndex));
+    auto it = buffer.find(pageIndex);
+    if (it != buffer.end())
+    {
+        buffer.erase(it);
+    }
     return true;
 }
 
@@ -82,7 +86,6 @@ void Buffer::setTotalPages(size_t totalPages)
 
 bool Buffer::flushAllPages()
 {
-    TRACE(true);
     std::vector<std::shared_ptr<Page>> pages;
     pages.push_back(buffer.begin() -> second);
     size_t startIndex = buffer.begin() -> first;

@@ -46,7 +46,6 @@ SortIterator::~SortIterator()
 
 bool SortIterator::sort(size_t startPageIndex, size_t endPageIndex)
 {
-	TRACE(true);
 	std::cout << "STATE -> SORT_MINI_RUNS: Sort cache-size mini runs" << std::endl;
 	_plan->buffer->clear();
 	std::vector<std::shared_ptr<Page>> pages = _plan->buffer->getExistingPages(startPageIndex, endPageIndex);

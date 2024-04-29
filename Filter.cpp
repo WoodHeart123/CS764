@@ -7,13 +7,11 @@ FilterPlan::FilterPlan(Plan *const input, Predicate predicate, std::vector<byte>
 
 FilterPlan::~FilterPlan()
 {
-	TRACE(true);
 	delete _input;
 } // FilterPlan::~FilterPlan
 
 Iterator *FilterPlan::init() const
 {
-	TRACE(true);
 	Iterator *const it = _input->init();
 	it->run();
 	delete it;
@@ -36,8 +34,6 @@ FilterIterator::FilterIterator(FilterPlan const *const plan)
 
 FilterIterator::~FilterIterator()
 {
-	TRACE(true);
-
 	traceprintf("produced %lu of %lu rows\n",
 				(unsigned long)(_produced),
 				(unsigned long)(_consumed));
@@ -49,6 +45,7 @@ bool FilterIterator::next()
 	{
 		if (newPage && newPage->getIsDirty())
 		{
+
 			_plan->buffer->replacePage(newPageIndex, newPage);
 			_plan->buffer->flushPage(newPageIndex);
 			newPageIndex++;
