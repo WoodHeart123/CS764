@@ -17,6 +17,7 @@ Iterator *FilterPlan::init() const
 	Iterator *const it = _input->init();
 	it->run();
 	delete it;
+	buffer->clear();
 	return new FilterIterator(this);
 } // FilterPlan::init
 
@@ -44,22 +45,21 @@ FilterIterator::~FilterIterator()
 
 bool FilterIterator::next()
 {
-	TRACE(true);
+	if (currentPageIndex >= totalPages)
+	{
+		if (newPage && newPage->getIsDirty())
+		{
+			_plan->buffer->replacePage(newPageIndex, newPage);
+			_plan->buffer->flushPage(newPageIndex);
+			newPageIndex++;
+		}
+		_plan->buffer->setTotalPages(newPageIndex);
+		return false;
+	}
 
 	if (_currentIndex >= currentPage->size())
 	{
-		if (currentPageIndex >= totalPages)
-		{
-			if (newPage && newPage->getIsDirty())
-			{
-				_plan->buffer->replacePage(newPageIndex, newPage);
-				_plan->buffer->flushPage(newPageIndex);
-				newPageIndex++;
-			}
-			_plan-> buffer -> setTotalPages(newPageIndex);
-			return false;
-		}
-
+		_plan->buffer->removePage(currentPage->getPageIndex());
 		currentPage = _plan->buffer->getExistingPage(currentPageIndex++);
 		_currentIndex = 0;
 	}
@@ -78,10 +78,7 @@ bool FilterIterator::next()
 			newPage->addRecord(*record);
 		}
 	}
-	else
-	{
-		_consumed++;
-	}
+	_consumed++;
 	_currentIndex++;
 	return true;
 } // FilterIterator::next

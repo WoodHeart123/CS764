@@ -30,7 +30,6 @@ std::vector<std::shared_ptr<Page>> Disk::readPagesFromDisk(unsigned long long of
     {
         offset -= SSDSize;
     }
-
     file.seekg(offset);
     std::vector<byte> data(PAGE_SIZE * numPages);
     // read page from disk

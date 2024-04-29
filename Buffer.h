@@ -30,6 +30,7 @@ public:
     bool isFull() const;
     // clear the buffer
     bool clear();
+    bool removePage(size_t pageIndex);
 
     const static size_t bufferSize = BUFFER_SIZE;
     const static size_t numOfPagesInBuffer = BUFFER_SIZE / PAGE_SIZE;
@@ -37,5 +38,5 @@ private:
     Disk *disk;
     std::map<size_t, std::shared_ptr<Page>> buffer;
     size_t totalPages;
-    size_t recordSize;
+    size_t _recordSize;
 };

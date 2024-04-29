@@ -1,7 +1,7 @@
 CPPOPT=-g -Og -D_DEBUG
 # -O2 -Os -Ofast
 # -fprofile-generate -fprofile-use
-CPPFLAGS=$(CPPOPT) -Wall -ansi -pedantic -std=c++17
+CPPFLAGS=$(CPPOPT) -Wall -ansi -pedantic -std=c++17 -fext-numeric-literals
 # -Wparentheses -Wno-unused-parameter -Wformat-security
 # -fno-rtti -std=c++11 -std=c++98
 
@@ -11,13 +11,13 @@ SCRS=
 
 # headers and code sources
 HDRS=	defs.h \
-		Iterator.h Scan.h Filter.h Sort.h Buffer.h Data.h Disk.h
+		Iterator.h Scan.h Filter.h Sort.h Buffer.h Data.h Disk.h LoserTree.h
 SRCS=	defs.cpp Assert.cpp Test.cpp \
-		Iterator.cpp Scan.cpp Filter.cpp Sort.cpp Buffer.cpp Data.cpp Disk.cpp
+		Iterator.cpp Scan.cpp Filter.cpp Sort.cpp Buffer.cpp Data.cpp Disk.cpp LoserTree.cpp
 
 # compilation targets
 OBJS=	defs.o Assert.o Test.o \
-		Iterator.o Scan.o Filter.o Sort.o Buffer.o Data.o Disk.o
+		Iterator.o Scan.o Filter.o Sort.o Buffer.o Data.o Disk.o LoserTree.o
 
 # RCS assists
 REV=-q -f
@@ -38,10 +38,11 @@ Test.o : Iterator.h Scan.h Filter.h Sort.h
 Iterator.o Scan.o Filter.o Sort.o : Iterator.h
 Scan.o : Scan.h
 Filter.o : Filter.h
-Sort.o : Sort.h
+Sort.o : Sort.h LoserTree.h
 Buffer.o : Buffer.h Disk.h
 Data.o : Data.h
 Disk.o : Disk.h Data.h
+LoserTree.o : LoserTree.h Data.h Buffer.h
 
 list : Makefile
 	echo Makefile $(HDRS) $(SRCS) $(DOCS) $(SCRS) > list

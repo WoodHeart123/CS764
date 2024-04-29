@@ -2,6 +2,9 @@
 #include <vector>
 #include <stdexcept>
 
+DataRecord::DataRecord() : key(0), fields(0) {}
+
+
 DataRecord::DataRecord(const std::vector<byte> &data)
 {
     auto it = data.begin();
@@ -77,9 +80,10 @@ std::vector<byte> DataRecord::serialize() const
 
 Page::Page() : isDirty(false) {}
 
-Page::Page(size_t recordSize) : recordSize(recordSize), isDirty(false) {}
+Page::Page(size_t recordSize) : _recordSize(recordSize), isDirty(false) {
+}
 
-Page::Page(size_t recordSize, const std::vector<byte> &data) : recordSize(recordSize), isDirty(false)
+Page::Page(size_t recordSize, const std::vector<byte> &data) : _recordSize(recordSize), isDirty(false)
 {
     auto it = data.begin();
     size_t numRecords = *reinterpret_cast<const size_t *>(&*it);
@@ -91,6 +95,13 @@ Page::Page(size_t recordSize, const std::vector<byte> &data) : recordSize(record
         DataRecord record(recordData);
         records.push_back(record);
     }
+}
+
+bool Page::clear()
+{
+    records.clear();
+    isDirty = true;
+    return true;
 }
 
 /**
@@ -116,7 +127,7 @@ std::vector<byte> Page::serialize() const
 
 bool Page::addRecord(const DataRecord &record)
 {
-    if (recordSize * (records.size() + 1ULL) > pageSize)
+    if (_recordSize * (records.size() + 1ULL) > pageSize)
     {
         return false;
     }
@@ -157,7 +168,7 @@ bool Page::setPageIndex(size_t index)
 
 bool Page::currentPageSize() const
 {
-    return records.size() * recordSize;
+    return records.size() * _recordSize;
 }
 
 size_t Page::size() const
@@ -170,7 +181,7 @@ bool Page::getIsDirty() const
     return isDirty;
 }
 
-std::vector<DataRecord> Page::getRecords() const
+std::vector<DataRecord> Page::getRecords()
 {
     return records;
 }

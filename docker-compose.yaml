@@ -1,0 +1,8 @@
+services:
+  my-container:
+    image: my-container:latest
+    build:
+      context: ./
+    restart: always
+    volumes:
+    - .:/app

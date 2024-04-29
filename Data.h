@@ -6,7 +6,7 @@ class DataRecord
 {
 
 public:
-    DataRecord() = default;
+    DataRecord();
     DataRecord(const std::vector<byte> &data);
     int cmp(const DataRecord &other) const;
     int keyCmp(const std::vector<byte> &key) const;
@@ -31,7 +31,8 @@ public:
     bool setPageIndex(size_t index);
     bool setRecord(size_t recordIndex, const DataRecord &record);
     bool getIsDirty() const;
-    std::vector<DataRecord> getRecords() const;
+    std::vector<DataRecord> getRecords();
+    bool clear();
     size_t size() const;
     bool currentPageSize() const;
     size_t getPageIndex() const;
@@ -39,7 +40,7 @@ public:
 private:
     std::vector<DataRecord> records;
     const static size_t pageSize = PAGE_SIZE - sizeof(size_t); // store the number of records in the page
-    size_t recordSize;
+    size_t _recordSize;
     size_t pageIndex;
     bool isDirty;
 };

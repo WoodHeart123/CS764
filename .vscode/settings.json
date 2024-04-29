@@ -59,6 +59,10 @@
         "random": "cpp",
         "map": "cpp",
         "xtree": "cpp",
-        "queue": "cpp"
+        "queue": "cpp",
+        "array": "cpp",
+        "deque": "cpp",
+        "ranges": "cpp",
+        "span": "cpp"
     }
 }

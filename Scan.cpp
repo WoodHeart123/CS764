@@ -5,7 +5,7 @@
 #include <ctime>
 #include <cctype>
 
-ScanPlan::ScanPlan(RowCount const count, Buffer *buffer, size_t record_size) : count(count), record_size(record_size)
+ScanPlan::ScanPlan(RowCount const count, Buffer *buffer, size_t recordSize) : count(count), record_size(recordSize)
 {
 	this->buffer = buffer;
 }
@@ -26,7 +26,6 @@ ScanIterator::ScanIterator(ScanPlan const *const plan) : _plan(plan), currentRow
 
 bool ScanIterator::next()
 {
-  TRACE(true);
 	if (currentRowCount >= _plan->count)
 	{
 		if (currentPage && currentPage->getIsDirty())
@@ -38,9 +37,7 @@ bool ScanIterator::next()
 	DataRecord *newRecord = new DataRecord(generateAlphanumericVector(_plan->record_size));
 	if (!currentPage->addRecord(*newRecord))
 	{  
-    if(_plan->buffer-> isFull()){
-      _plan->buffer->flushAllPages();
-    }
+		_plan->buffer->flushPage(currentPage->getPageIndex());
 		// If page is full, flush it and get/create a new one
 		currentPage = _plan->buffer->createNewPage();
 		currentPage->addRecord(*newRecord);
