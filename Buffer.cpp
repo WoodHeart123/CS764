@@ -144,7 +144,11 @@ bool Buffer::replacePage(size_t pageIndex, std::shared_ptr<Page> newPage)
     {
         buffer.erase(it);
     }
-    buffer.erase(buffer.find(newPage->getPageIndex()));
+    it = buffer.find(newPage->getPageIndex());
+    if (it != buffer.end())
+    {
+        buffer.erase(it);
+    }
     newPage->setPageIndex(pageIndex);
     buffer[pageIndex] = newPage;
     return true;

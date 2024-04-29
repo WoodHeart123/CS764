@@ -12,15 +12,17 @@ LoserTree::LoserTree(const std::vector<runs> &runList, Buffer *buffer) : _runLis
         printf("runList.at(%d).currentPageIndex = %lu, record size = %d\n", i, runList.at(i).currentPageIndex, buffer->getExistingPage(runList.at(i).currentPageIndex)->getRecords().size());
         if (_runList.at(i).currentPageIndex <= HDD_PAGE_INDEX)
         {
-            size_t latency = PAGE_SIZE / SSD_BANDWIDTH + SSD_LATENCY;
+            float latency = PAGE_SIZE / SSD_BANDWIDTH + SSD_LATENCY;
+            latency *= 1000000;
             std::cout << "STATE -> READ_RUN_PAGES_SSD: Read sorted run pages from the SSD device" << std::endl;
-            std::cout << "ACCESS -> A write to SSD was made with size " << PAGE_SIZE << "bytes and latency " << latency << "us" << std::endl;
+            std::cout << "ACCESS -> A write to SSD was made with size " << PAGE_SIZE << " bytes and latency " << latency << "us" << std::endl;
         }
         else
         {
-            size_t latency = PAGE_SIZE / HDD_BANDWIDTH + HDD_LATENCY;
+            float latency = PAGE_SIZE / HDD_BANDWIDTH + HDD_LATENCY;
+            latency *= 1000000;
             std::cout << "STATE -> READ_RUN_PAGES_HDD: Read sorted run pages from the HDD device" << std::endl;
-            std::cout << "ACCESS -> A write to SSD was made with size " << PAGE_SIZE << "bytes and latency " << latency << "us" << std::endl;
+            std::cout << "ACCESS -> A write to HDD was made with size " << PAGE_SIZE << " bytes and latency " << latency << "us" << std::endl;
         }
         lists.push_back(buffer->getExistingPage(_runList.at(i).currentPageIndex)->getRecords());
         indices[i] = 0;

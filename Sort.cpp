@@ -32,7 +32,7 @@ SortIterator::SortIterator(SortPlan const *const plan) : _plan(plan), _produced(
 	for (size_t i = 0; i < totalPages; i += _plan->buffer->numOfPagesInBuffer)
 	{
 		sort(i, std::min(i + _plan->buffer->numOfPagesInBuffer - 1, totalPages - 1));
-		runList.push({i, i + _plan->buffer->numOfPagesInBuffer - 1, i});
+		runList.push({i, std::min(i + _plan->buffer->numOfPagesInBuffer - 1, totalPages - 1), i});
 	}
 } // SortIterator::SortIterator
 
@@ -81,9 +81,9 @@ bool SortIterator::sort(size_t startPageIndex, size_t endPageIndex)
 	if(endPageIndex > HDD_PAGE_INDEX){
 		float latency = static_cast<float>((static_cast<unsigned long long>(endPageIndex) - HDD_PAGE_INDEX + 1) * PAGE_SIZE) / static_cast<float>(HDD_BANDWIDTH) + HDD_LATENCY;
 		latency *= 1000000;
-		std::cout << "STATE -> SPILL_RUNS_SSD: Spill sorted runs to the SSD device" << std::endl;
-		std::cout << "ACCESS -> A write to SSD was made with size " << (static_cast<unsigned long long>(endPageIndex) - HDD_PAGE_INDEX + 1) * PAGE_SIZE  << " bytes and latency " << latency << " us" << std::endl;
 		std::cout << "STATE -> SPILL_RUNS_HDD: Spill sorted runs to the HDD device" << std::endl;
+		std::cout << "ACCESS -> A write to HDD was made with size " << (static_cast<unsigned long long>(endPageIndex) - HDD_PAGE_INDEX + 1) * PAGE_SIZE  << " bytes and latency " << latency << " us" << std::endl;
+
 	}
 	_plan->buffer->flushPage(page->getPageIndex());
 	_plan->buffer->clear();

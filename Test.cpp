@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
 {
 	int opt;
 	// default values
-	int recordCount = 1000, recordSize = 100;
+	int recordCount = 1000, recordSize = 1024;
 	std::string traceFileName = "trace.txt";
 	while((opt = getopt(argc, argv, "c:s:o:")) != -1){
 		switch(opt){
