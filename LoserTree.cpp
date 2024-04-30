@@ -9,7 +9,6 @@ LoserTree::LoserTree(const std::vector<runs> &runList, Buffer *buffer) : _runLis
 
     for (int i = 0; i < k; ++i)
     {
-        printf("runList.at(%d).currentPageIndex = %lu, record size = %d\n", i, runList.at(i).currentPageIndex, buffer->getExistingPage(runList.at(i).currentPageIndex)->getRecords().size());
         if (_runList.at(i).currentPageIndex <= HDD_PAGE_INDEX)
         {
             float latency = PAGE_SIZE / SSD_BANDWIDTH + SSD_LATENCY;

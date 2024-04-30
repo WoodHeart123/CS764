@@ -5,18 +5,15 @@
 SortPlan::SortPlan(Plan *const input, bool removeDuplicates) : _input(input), _removeDuplicates(removeDuplicates)
 {
 	this->buffer = _input->buffer;
-	TRACE(true);
 } // SortPlan::SortPlan
 
 SortPlan::~SortPlan()
 {
-	TRACE(true);
 	delete _input;
 } // SortPlan::~SortPlan
 
 Iterator *SortPlan::init() const
 {
-	TRACE(true);
 	Iterator *const it = _input->init();
 	it->run();
 	delete it;
@@ -25,7 +22,6 @@ Iterator *SortPlan::init() const
 
 SortIterator::SortIterator(SortPlan const *const plan) : _plan(plan), _produced(0)
 {
-	TRACE(true);
 	size_t totalPages = _plan->buffer->getTotalPages();
 	_removeDuplicates = _plan->_removeDuplicates;
 	// first sort the pages
@@ -38,8 +34,6 @@ SortIterator::SortIterator(SortPlan const *const plan) : _plan(plan), _produced(
 
 SortIterator::~SortIterator()
 {
-	TRACE(true);
-
 	traceprintf("run %lu merge\n",
 				(unsigned long)(_produced));
 } // SortIterator::~SortIterator
@@ -91,7 +85,6 @@ bool SortIterator::sort(size_t startPageIndex, size_t endPageIndex)
 
 bool SortIterator::next()
 {
-	TRACE(true);
 	if (runList.size() > 1)
 	{
 		std::vector<runs> mergeRunList;

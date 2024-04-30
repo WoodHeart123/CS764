@@ -98,7 +98,6 @@ bool Buffer::flushAllPages()
           pages.push_back(it->second);
         }
     }
-    printf("startIndex = %lu\n, size = %d\n", startIndex, pages.size());
     disk->writePagesToDisk(startIndex * PAGE_SIZE, pages);
     clear();
     return true;
