@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
 				return 1;
 		}
 	}
-
+	freopen (traceFileName, "w", stdout);
 	Buffer *const buffer = new Buffer(recordSize);
 	Plan *const plan = new SortPlan(new FilterPlan(new ScanPlan(recordCount, buffer, recordSize), greater, std::vector<byte>(8, 'Z')));
 	Iterator *const it = plan->init();
